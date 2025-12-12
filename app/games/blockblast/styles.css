@@ -1,62 +1,141 @@
-.bb-container {
-  padding: 20px;
+/* Block Blast improved styles */
+.bb-container.improved {
+  max-width: 940px;
+  margin: 20px auto;
+  padding: 18px;
+  font-family: Inter, Arial, sans-serif;
 }
 
+.top-row {
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.score { font-size: 18px; }
+.controls button {
+  margin-left: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+/* layout */
+.game-area {
+  display:flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+/* board grid */
 .board {
   width: 400px;
   height: 400px;
   display: grid;
-  grid-template-columns: repeat(10, 40px);
-  grid-template-rows: repeat(10, 40px);
-  border: 3px solid #000;
-  margin-bottom: 25px;
+  border: 4px solid #111827;
+  background: linear-gradient(180deg,#f7fbff, #eaf2ff);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
   position: relative;
+  touch-action: none;
 }
 
-.empty {
-  background: #eee;
-  border: 1px solid #ccc;
+.cell {
+  box-sizing: border-box;
+  border: 1px solid rgba(0,0,0,0.06);
+  width: 100%;
+  height: 100%;
+  transition: background 0.18s ease, transform 0.12s ease;
 }
 
-.filled {
-  background: #3b82f6;
-  border: 1px solid #1e40af;
+.cell.empty {
+  background: linear-gradient(180deg,#ffffff,#f2f6ff);
 }
 
-.pieces-container {
-  display: flex;
-  gap: 20px;
+.cell.filled {
+  background: linear-gradient(180deg,#3b82f6, #1e40af);
+  box-shadow: inset 0 -6px 10px rgba(0,0,0,0.12);
+  transform: translateY(0);
 }
 
-.piece {
-  display: inline-grid;
-  grid-auto-rows: 25px;
-  grid-auto-columns: 25px;
-  background: #fafafa;
-  padding: 10px;
-  border: 2px solid #000;
+/* placing animation (pop-in + fade in) */
+.cell.placing {
+  animation: placingAnim 140ms ease forwards;
+}
+@keyframes placingAnim {
+  0% { transform: scale(0.6) rotate(-6deg); opacity: 0; filter: blur(2px); }
+  100% { transform: scale(1) rotate(0); opacity: 1; filter: blur(0); }
 }
 
-.p-filled {
-  background: #3b82f6;
-  border: 1px solid #1e40af;
+/* clearing animation (slide out + fade) */
+.cell.clearing {
+  animation: clearingAnim 320ms ease forwards;
+}
+@keyframes clearingAnim {
+  0% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(-8px) scale(1.02); opacity: 0.9; filter: saturate(1.2); }
+  100% { transform: translateY(-24px); opacity: 0; }
 }
 
-.p-empty {
-  background: transparent;
+/* pieces panel */
+.pieces-panel {
+  min-width: 180px;
 }
 
-.empty-piece {
-  opacity: 0.4;
-  padding: 20px;
-  border: 2px dashed #aaa;
+.pieces-list {
+  display:flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
-.click-overlay {
-  width: 400px;
-  height: 400px;
-  position: absolute;
-  top: 138px; /* depends on layout */
-  left: 20px;
-  cursor: pointer;
+.piece-box {
+  border: 2px solid #cbd5e1;
+  padding: 8px;
+  background: #fff;
+  box-shadow: 0 6px 12px rgba(10,20,40,0.04);
+  border-radius: 8px;
+  cursor: grab;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.piece-box:active { cursor: grabbing; }
+.piece-box.used { opacity: 0.45; cursor: default; border-style: dashed; }
+
+.piece-grid {
+  display: grid;
+  gap: 4px;
+  padding: 4px;
+}
+
+.pfilled {
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(180deg,#60a5fa,#1e3a8a);
+  border-radius: 3px;
+  box-shadow: inset 0 -3px 6px rgba(0,0,0,0.12);
+}
+.pempty { width: 20px; height: 20px; }
+
+.pieces-list .dragging { opacity: 0.6; transform: scale(0.98); }
+
+/* hints and legend */
+.hint { margin-top: 8px; font-size: 12px; color: #475569; }
+.legend { margin-top: 12px; display:flex; gap:12px; align-items:center; color:#374151; font-size:13px; }
+.dot { display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:middle; }
+.used-dot { background: linear-gradient(#3b82f6,#1e40af); }
+.placing-dot { background: linear-gradient(#34d399,#059669); }
+.clearing-dot { background: linear-gradient(#f97316,#ea580c); }
+
+/* responsive */
+@media (max-width: 820px) {
+  .game-area { flex-direction: column; align-items: center; }
+  .pieces-panel { margin-top: 12px; }
+  .board { width: 320px; height: 320px; }
+}
+
+/* extra small scales */
+@media (max-width: 420px) {
+  .board { width: 280px; height: 280px; }
 }
